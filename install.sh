@@ -26,25 +26,11 @@ if ! command -v node &> /dev/null; then
     echo "Installing Node.js..."
     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
     sudo apt install -y nodejs
+    npm install yarn
     corepack enable
     echo "Node.js and Yarn installed."
 else
     echo "Node.js is already installed."
-fi
-
-# Installa Docker solo se non è WSL 2
-if grep -qi "microsoft" /proc/version && [ -d "/mnt/c/" ]; then
-    echo "Skipping Docker installation because WSL 2 is detected. Enable WSL integration in Docker Desktop."
-else
-    if ! command -v docker &> /dev/null; then
-        echo "Installing Docker..."
-        sudo apt install -y docker.io
-        sudo systemctl enable --now docker
-        sudo usermod -aG docker $USER
-        echo "Docker installed. Please log out and back in for group changes to take effect."
-    else
-        echo "Docker is already installed."
-    fi
 fi
 
 # Installa Oh My Zsh
