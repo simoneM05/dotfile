@@ -40,4 +40,18 @@ else
     echo "Oh My Zsh is already installed."
 fi
 
-echo "Installation complete!"
+# Installa lsd
+if ! command -v lsd &> /dev/null; then
+    echo "Installing lsd..."
+    sudo apt install -y lsd
+else
+    echo "lsd is already installed."
+fi
+
+# Installa zsh-autosuggestions
+if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
+    echo "Installing zsh-autosuggestions..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+else
+    echo "zsh-autosuggestions is already installed."
+fi
