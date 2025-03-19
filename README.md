@@ -6,4 +6,5 @@ chmod +x install.sh
 ./install.sh
 
 mv .zshrc ~/.zshrc
+rm -rf ~/dotfile
 ```
