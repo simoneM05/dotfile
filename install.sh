@@ -21,21 +21,30 @@ else
     echo "Snap is already installed."
 fi
 
-# Installa dipendenze per Docker
-sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-
-# Aggiungi il repository ufficiale di Docker
-if ! command -v docker &> /dev/null; then
-    echo "Installing Docker..."
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt update
-    sudo apt install -y docker-ce docker-ce-cli containerd.io
-    sudo systemctl enable --now docker
-    sudo usermod -aG docker $USER
-    echo "Docker installed. Please log out and back in for group changes to take effect."
+# Installa Node.js e Yarn
+if ! command -v node &> /dev/null; then
+    echo "Installing Node.js..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    sudo apt install -y nodejs
+    corepack enable
+    echo "Node.js and Yarn installed."
 else
-    echo "Docker is already installed."
+    echo "Node.js is already installed."
+fi
+
+# Installa Docker solo se non è WSL 2
+if grep -qi "microsoft" /proc/version && [ -d "/mnt/c/" ]; then
+    echo "Skipping Docker installation because WSL 2 is detected. Enable WSL integration in Docker Desktop."
+else
+    if ! command -v docker &> /dev/null; then
+        echo "Installing Docker..."
+        sudo apt install -y docker.io
+        sudo systemctl enable --now docker
+        sudo usermod -aG docker $USER
+        echo "Docker installed. Please log out and back in for group changes to take effect."
+    else
+        echo "Docker is already installed."
+    fi
 fi
 
 # Installa Oh My Zsh
